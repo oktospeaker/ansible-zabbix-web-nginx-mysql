@@ -1,0 +1,11 @@
+---
+service_name: zabbix-web-docker
+uninstall_service: false
+DB_SERVER_HOST: mysql-docker
+ZBX_SRV: zabbix-srv-docker
+DB_CONTAINER: mysql
+ZBX_SRV_CONTAINER: zabbix-server
+web_host_port: 80
+web_container_port: 8080
+port_type: tcp
+docker_image: zabbix/zabbix-web-nginx-mysql
