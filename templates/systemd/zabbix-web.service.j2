@@ -1,0 +1,25 @@
+[Unit]
+Description=Zabbix web-server docker container
+Requires=docker.service
+After=zabbix-srv-docker.service
+
+[Service]
+Restart=always
+ExecStartPre=-/usr/bin/docker rm {{ service_name }}
+ExecStart=/usr/bin/docker run \
+        --rm \
+        --name {{ service_name }} \
+        -t \
+        -e DB_SERVER_HOST="{{ DB_SERVER_HOST }}" \
+        -e MYSQL_DATABASE="{{ MYSQL_DATABASE }}" \
+        -e MYSQL_USER="{{ MYSQL_USER }}" \
+        -e MYSQL_PASSWORD="{{ MYSQL_PASSWORD }}" \
+        -e MYSQL_ROOT_PASSWORD="{{ MYSQL_ROOT_PASSWORD }}" \
+        --link {{ DB_SERVER_HOST }}:{{ DB_CONTAINER }} \
+        --link {{ ZBX_SRV }}:{{ ZBX_SRV_CONTAINER }} \
+        -p {{ web_host_port }}:{{ web_container_port }}/{{ port_type }} \
+        {{ docker_image }}
+ExecStop=/usr/bin/docker stop -t 1 {{ service_name }}
+
+[Install]
+WantedBy=multi-user.target
